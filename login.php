@@ -1,7 +1,7 @@
 <?php
 /**
- * Login Process
- * MASATA PINJAMIN - Koperasi Simpan Pinjam
+ * Login Admin / Petugas
+ * MASATA PINJAMIN
  */
 
 require_once 'config/database.php';
@@ -44,11 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: ' . BASE_URL . '/admin/dashboard.php');
                 exit;
             }
-
-            $error = 'Username atau Password salah!';
-        } else {
-            $error = 'Username atau Password salah!';
         }
+
+        $error = 'Username atau Password salah!';
     }
 }
 ?>
@@ -57,20 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MASATA PINJAMIN</title>
+    <title>Login Petugas - MASATA PINJAMIN</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            color-scheme: light;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        :root { color-scheme: light; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             min-height: 100vh;
             display: flex;
@@ -83,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.18), transparent 24%),
                 linear-gradient(135deg, #07111f 0%, #0d1b2a 50%, #10243b 100%);
         }
-
         body::before,
         body::after {
             content: '';
@@ -93,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             filter: blur(18px);
             opacity: 0.55;
         }
-
         body::before {
             width: 320px;
             height: 320px;
@@ -101,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             bottom: -90px;
             background: rgba(45, 212, 191, 0.18);
         }
-
         body::after {
             width: 220px;
             height: 220px;
@@ -109,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             top: 12%;
             background: rgba(56, 189, 248, 0.16);
         }
-
         .login-container {
             position: relative;
             width: min(1040px, calc(100vw - 32px));
@@ -122,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 32px 80px rgba(0, 0, 0, 0.34);
             backdrop-filter: blur(18px);
         }
-
         .login-header {
             position: relative;
             padding: 48px 42px;
@@ -133,17 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 radial-gradient(circle at top left, rgba(45, 212, 191, 0.28), transparent 34%),
                 radial-gradient(circle at 70% 25%, rgba(56, 189, 248, 0.22), transparent 30%);
         }
-
-        .login-header::after {
-            content: '';
-            position: absolute;
-            inset: auto -60px -60px auto;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
         .login-header i {
             display: inline-flex;
             width: 68px;
@@ -153,33 +127,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 22px;
             border-radius: 22px;
             font-size: 30px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+            background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
         }
-
         .login-header h1 {
             font-size: clamp(2rem, 4vw, 3.2rem);
             font-weight: 900;
             letter-spacing: -0.03em;
             margin-bottom: 12px;
         }
-
         .login-header p {
             font-size: 1rem;
             line-height: 1.7;
-            color: rgba(226, 232, 240, 0.8);
+            color: rgba(226, 232, 240, 0.84);
             max-width: 42ch;
         }
-
-        .login-body {
-            padding: 42px 38px;
-            background: rgba(255, 255, 255, 0.93);
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
+        .login-body { padding: 42px 38px; background: rgba(255,255,255,0.93); }
+        .form-group { margin-bottom: 18px; }
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -187,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 700;
             font-size: 14px;
         }
-
         .form-group input {
             width: 100%;
             padding: 14px 16px;
@@ -197,14 +159,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: all 0.25s ease;
             background: #fff;
         }
-
         .form-group input:focus {
             outline: none;
             border-color: rgba(45, 212, 191, 0.85);
             box-shadow: 0 0 0 0.22rem rgba(45, 212, 191, 0.16);
-            transform: translateY(-1px);
         }
-
         .btn-login {
             width: 100%;
             padding: 14px 16px;
@@ -219,19 +178,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 14px 30px rgba(45, 212, 191, 0.22);
             margin-top: 10px;
         }
-
         .btn-login:hover {
             transform: translateY(-2px);
             box-shadow: 0 18px 36px rgba(56, 189, 248, 0.26);
         }
-
         .alert {
             margin-bottom: 18px;
             border-radius: 14px;
             border: none;
             padding: 12px 15px;
         }
-
         .login-note {
             margin-top: 18px;
             padding: 14px 16px;
@@ -241,51 +197,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #14532d;
             font-size: 13px;
         }
-
-        .login-note strong {
-            display: inline-block;
-            min-width: 92px;
-        }
-
+        .login-note strong { display: inline-block; min-width: 92px; }
         .login-footer {
             text-align: center;
             padding: 14px 0 0;
             color: #64748b;
             font-size: 12px;
         }
-
-        @media (max-width: 900px) {
-            body {
-                overflow-y: auto;
-                padding: 18px 0;
-            }
-
-            .login-container {
-                grid-template-columns: 1fr;
-            }
-
-            .login-header,
-            .login-body {
-                padding: 30px 22px;
-            }
+        .login-links {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
         }
-
-        @media (max-width: 576px) {
-            .login-container {
-                width: calc(100vw - 18px);
-                border-radius: 22px;
-            }
+        .login-links a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 11px;
+            padding: 10px 12px;
+        }
+        .link-anggota {
+            border: 1px solid rgba(14,165,233,0.35);
+            color: #0369a1;
+            background: rgba(14,165,233,0.08);
+        }
+        @media (max-width: 900px) {
+            body { overflow-y: auto; padding: 18px 0; }
+            .login-container { grid-template-columns: 1fr; }
+            .login-header,
+            .login-body { padding: 30px 22px; }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-header">
-            <i class="fas fa-piggy-bank"></i>
+            <i class="fas fa-user-shield"></i>
             <h1>MASATA PINJAMIN</h1>
             <p>
-                Panel Koperasi Simpan Pinjam yang profesional, modern, dan mudah digunakan.
-                Kelola anggota, simpanan, pinjaman, angsuran, dan laporan dalam satu tempat.
+                Panel khusus Admin dan Petugas koperasi untuk mengelola data anggota,
+                simpanan, pinjaman, angsuran, dan laporan.
             </p>
         </div>
 
@@ -297,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <h2 class="mb-2" style="font-weight: 800; color: #0f172a;">Masuk ke Sistem</h2>
+            <h2 class="mb-2" style="font-weight: 800; color: #0f172a;">Login Admin / Petugas</h2>
             <p class="mb-4" style="color: #64748b;">Gunakan akun petugas koperasi untuk melanjutkan.</p>
 
             <form method="POST" action="">
@@ -317,14 +272,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="login-note">
-                <div><i class="fas fa-circle-info"></i> Login demo yang disiapkan di data contoh:</div>
+                <div><i class="fas fa-circle-info"></i> Login demo:</div>
                 <div><strong>Admin:</strong> Admin / admin123</div>
                 <div><strong>Petugas:</strong> Ata / petugas123</div>
             </div>
 
-            <div class="mt-3 text-center">
-                <a href="<?php echo BASE_URL; ?>/anggota/login.php" class="btn btn-outline-primary w-100" style="border-radius: 12px;">
-                    <i class="fas fa-user"></i> Masuk Sebagai Anggota
+            <div class="login-links">
+                <a href="<?php echo BASE_URL; ?>/anggota/login.php" class="link-anggota">
+                    <i class="fas fa-user"></i> Login Anggota
                 </a>
             </div>
 

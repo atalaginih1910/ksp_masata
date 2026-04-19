@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏪 MASATA PINJAMIN - Aplikasi Koperasi Simpan Pinjam
 
 Aplikasi web manajemen **Koperasi Simpan Pinjam** yang dibangun dengan **PHP Native** dan **Bootstrap 5**.
@@ -147,3 +148,7 @@ Untuk bantuan, hubungi administrator atau cek browser console untuk error detail
 **Developer**: Ahmad  
 
 **Selamat menggunakan MASATA PINJAMIN!** 🎉
+=======
+# ksp_masata
+koperasi simpan pinjam projet UK
+>>>>>>> a7828f1d045c32e56059b9c4acc53e17cc15e453

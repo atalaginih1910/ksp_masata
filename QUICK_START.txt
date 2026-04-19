@@ -1,0 +1,56 @@
+🚀 QUICK START - MASATA PINJAMIN
+
+⚡ 5 Langkah Cepat Setup:
+
+1️⃣ BUKA PHPMYADMIN
+   http://localhost/phpmyadmin/
+
+2️⃣ IMPORT DATABASE
+   └─ Click Import → Select SETUP.sql → Click Import
+   
+3️⃣ EDIT KONFIGURASI
+   └─ Open: config/database.php
+   └─ Verify DB settings (biasanya tidak perlu ubah)
+
+4️⃣ AKSES APLIKASI
+   └─ http://localhost/Ahmad/ksp_masata/login.php
+
+5️⃣ LOGIN
+   ├─ Username: Ahmad
+   └─ Password: admin123
+
+═════════════════════════════════════════════════════
+
+✅ SELESAI! Aplikasi siap digunakan.
+
+📚 Main Menu:
+├─ Dashboard        → Statistik & Grafik
+├─ Anggota          → Manajemen anggota
+├─ Simpanan         → Transaksi simpanan
+├─ Pinjaman         → Transaksi pinjaman
+├─ Angsuran         → Pembayaran angsuran
+├─ Kategori Pinjaman → Setting jenis pinjaman
+└─ Laporan          → Print laporan
+
+═════════════════════════════════════════════════════
+
+⚠️ JIKA ERROR:
+
+Database Connection Failed?
+└─ Cek DB setting di config/database.php
+└─ Pastikan MySQL running di WAMP/XAMPP
+
+Login Error?
+└─ Username: Ahmad (case-sensitive)
+└─ Password: admin123 (case-sensitive)
+└─ Clear browser cache & cookies
+
+Halaman Putih/Blank?
+└─ F12 → Console → Cek error message
+└─ Pastikan PHP versi 7.4+ running
+
+═════════════════════════════════════════════════════
+
+📖 DOKUMENTASI LENGKAP: Baca README.md atau INSTALASI.txt
+
+═════════════════════════════════════════════════════

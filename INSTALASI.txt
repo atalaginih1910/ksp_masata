@@ -1,0 +1,271 @@
+╔════════════════════════════════════════════════════════════════╗
+║           MASATA PINJAMIN - PANDUAN INSTALASI                  ║
+║         Aplikasi Koperasi Simpan Pinjam v1.0.0                ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 DAFTAR ISI:
+1. Persiapan Sistem
+2. Setup Database
+3. Konfigurasi Aplikasi
+4. Running Aplikasi
+5. Login Pertama Kali
+6. Troubleshooting
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 1: PERSIAPAN SISTEM
+
+Persyaratan:
+├─ WAMP/XAMPP version 7.4+ (atau PHP 8.0+)
+├─ MySQL 5.7+
+├─ Browser modern (Chrome, Firefox, Edge)
+└─ Text editor untuk edit konfigurasi
+
+Instalasi WAMP/XAMPP:
+1. Download WAMP dari https://www.wampserver.com/ 
+   atau XAMPP dari https://www.apachefriends.org/
+2. Install sesuai instruksi pada installer
+3. Jalankan WAMP/XAMPP
+   - Pastikan Apache & MySQL running (icon warna hijau)
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 2: SETUP DATABASE
+
+Opsi A - Menggunakan phpMyAdmin (Recommended untuk Pemula):
+
+1. Buka browser, akses: http://localhost/phpmyadmin/
+
+2. Klik menu "Import" di navbar atas
+
+3. Pilih file "SETUP.sql" dari folder ksp_masata
+
+4. Klik tombol "Import" dan tunggu hingga selesai
+
+5. Verifikasi:
+   - Pada sidebar kiri, pilih database "koperasi_simpan_pinjam"
+   - Seharusnya ada 7 tabel: anggota, petugas_koperasi, kategori_pinjaman, 
+     simpanan, pinjaman, angsuran, detail_angsuran
+
+Opsi B - Menggunakan Command Line (Untuk Advanced Users):
+
+1. Buka Command Prompt/Terminal
+
+2. Masuk ke folder MySQL:
+   cd "C:\wamp64\bin\mysql\mysql5.7.20\bin"
+   (sesuaikan versi MySQL Anda)
+
+3. Jalankan command:
+   mysql -u root -p koperasi_simpan_pinjam < "C:\path\to\SETUP.sql"
+   
+4. Masukkan password MySQL jika ada (default kosong, tekan Enter)
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 3: KONFIGURASI APLIKASI
+
+1. Buka file: config/database.php
+
+2. Verifikasi/Edit konfigurasi:
+   
+   define('DB_HOST', 'localhost');         // Hostname MySQL
+   define('DB_USER', 'root');              // Username MySQL
+   define('DB_PASS', '');                  // Password MySQL (kosong untuk default)
+   define('DB_NAME', 'koperasi_simpan_pinjam');  // Database name
+
+3. Sesuaikan dengan setting MySQL Anda
+
+4. Simpan file (Ctrl+S)
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 4: RUNNING APLIKASI
+
+Cara 1 - Menggunakan Browser Direct:
+
+1. Pastikan WAMP/XAMPP running
+
+2. Buka browser
+
+3. Akses URL:
+   http://localhost/Ahmad/ksp_masata/login.php
+
+4. Jika berhasil, akan muncul halaman login MASATA PINJAMIN
+
+Cara 2 - Melalui File Manager:
+
+1. Buka folder: C:\wamp64\www\Ahmad\ksp_masata\
+
+2. Klik file "login.php" → Open with → Chrome/Firefox
+
+3. Browser akan membuka: http://localhost/Ahmad/ksp_masata/login.php
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 5: LOGIN PERTAMA KALI
+
+Username: Ahmad
+Password: admin123
+
+Petunjuk Login:
+1. Masukkan username "Ahmad"
+2. Masukkan password "admin123"
+3. Klik tombol "MASUK"
+4. Tunggu hingga dialihkan ke Dashboard
+5. Selamat! Aplikasi siap digunakan
+
+Catatan Keamanan:
+- Segera ubah password setelah login pertama
+- Tambahkan akun petugas baru melalui database
+- Untuk password hashing, gunakan password_hash() di production
+
+═══════════════════════════════════════════════════════════════════
+
+✅ STEP 6: STRUKTUR FOLDER PENTING
+
+ksp_masata/
+├── admin/
+│   ├── dashboard.php        ← Halaman utama
+│   ├── anggota/             ← Manajemen anggota
+│   ├── simpanan/            ← Transaksi simpanan
+│   ├── pinjaman/            ← Transaksi pinjaman
+│   ├── angsuran/            ← Pembayaran angsuran
+│   ├── kategori/            ← Setting kategori pinjaman
+│   └── laporan/             ← Laporan & print
+├── config/
+│   ├── database.php         ← ⚙️ PENTING: Edit file ini!
+│   ├── session.php
+│   └── helper.php
+├── partials/                ← Template HTML
+├── assets/                  ← CSS, JS, Images
+├── index.php                ← Redirect ke login
+├── login.php                ← Halaman login
+├── logout.php               ← Proses logout
+├── README.md                ← Dokumentasi
+└── SETUP.sql                ← Database script
+
+═══════════════════════════════════════════════════════════════════
+
+🐛 TROUBLESHOOTING
+
+❌ Error: "Koneksi Database Gagal: Unknown database"
+
+Solusi:
+1. Pastikan database sudah di-import dengan benar
+2. Cek nama database di phpMyAdmin (harus "koperasi_simpan_pinjam")
+3. Verify di config/database.php pakai nama yang sama
+
+❌ Error: "Access denied for user 'root'@'localhost'"
+
+Solusi:
+1. Cek password MySQL di config/database.php
+2. Jika WAMP default, password kosong (DB_PASS = '')
+3. Reset MySQL password via phpMyAdmin jika lupa
+
+❌ Halaman login tidak muncul (white page)
+
+Solusi:
+1. Cek error message di browser console (F12)
+2. Pastikan PHP versi 7.4+ (tidak support < 7.3)
+3. Cek WAMP/XAMPP status (harus running)
+4. Clear browser cache (Ctrl+Shift+Delete)
+
+❌ Error: "header already sent"
+
+Solusi:
+1. Pastikan tidak ada spasi/character di awal file .php
+2. Save file dengan encoding UTF-8 WITHOUT BOM
+3. Gunakan editor yang tepat (VS Code, Notepad++, Sublime)
+
+❌ Sidebar menu tidak terlihat atau styling rusak
+
+Solusi:
+1. Hard refresh browser (Ctrl+Shift+R)
+2. Clear CSS cache (delete browser cache)
+3. Cek Console (F12) untuk error JavaScript
+4. Pastikan folder /assets/ lengkap dengan css/ dan js/
+
+❌ Table tidak muncul data (Blank)
+
+Solusi:
+1. Pastikan database sudah punya data (import SETUP.sql)
+2. Cek apakah sudah insert sample data
+3. Lihat error message di browser console (F12)
+
+❌ Login error "Username atau Password salah"
+
+Solusi:
+1. Username harus "Ahmad" (case-sensitive)
+2. Password harus "admin123" (case-sensitive)
+3. Clear cookies & cache browser
+4. Coba gunakan Incognito mode
+
+═══════════════════════════════════════════════════════════════════
+
+📝 CATATAN PENTING
+
+Performance:
+├─ Aplikasi ini dirancang untuk ~5000 transaksi per bulan
+├─ Untuk data lebih besar, pertimbangkan database optimization
+└─ Update library Chart.js & Bootstrap secara berkala
+
+Security Recommendations:
+├─ Implementasi password hashing (bcrypt/password_hash)
+├─ Tambahkan CSRF token untuk form submission
+├─ Setup HTTPS di production
+├─ Batasi akses IP untuk admin
+└─ Regular backup database
+
+Maintenance:
+├─ Backup database setiap minggu
+├─ Check error logs secara berkala
+├─ Update password admin setiap 3 bulan
+└─ Monitor penggunaan database storage
+
+═══════════════════════════════════════════════════════════════════
+
+👨‍💻 FITUR YANG SUDAH DIIMPLEMENTASI
+
+✓ Login & Session Management
+✓ Dashboard dengan statistik
+✓ CRUD Anggota lengkap
+✓ Simpanan dengan history
+✓ Pinjaman dengan approval workflow
+✓ Angsuran payment tracking
+✓ Kategori pinjaman management
+✓ Laporan dengan filter & print
+✓ Responsive design
+✓ Chart.js integration
+
+═══════════════════════════════════════════════════════════════════
+
+🚀 SELANJUTNYA
+
+Setelah instalasi berhasil, Anda bisa:
+
+1. ➕ Tambah data anggota di menu Anggota
+2. 💰 Catat simpanan anggota di menu Simpanan
+3. 💳 Ajukan pinjaman di menu Pinjaman
+4. ✅ Approve pinjaman dan catat pembayaran
+5. 📊 Lihat laporan di menu Laporan
+6. 🖨️ Print laporan sesuai kebutuhan
+
+═══════════════════════════════════════════════════════════════════
+
+📞 KONTAK & SUPPORT
+
+Untuk bantuan lebih lanjut:
+1. Check README.md untuk dokumentasi lengkap
+2. Review database structure di phpMyAdmin
+3. Check browser developer console untuk error details
+4. Hubungi administrator sistem
+
+═══════════════════════════════════════════════════════════════════
+
+Version: 1.0.0
+Last Updated: April 2026
+Developed by: Ahmad
+
+Terima kasih telah menggunakan MASATA PINJAMIN! 🎉
+
+═══════════════════════════════════════════════════════════════════

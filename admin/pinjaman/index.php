@@ -210,7 +210,7 @@ require_once '../../partials/sidebar.php';
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="id_anggota" class="form-label">Anggota</label>
-                        <select name="id_anggota" id="id_anggota" class="form-control" required>
+                        <select name="id_anggota" id="id_anggota" class="form-control member-select" required>
                             <option value="">-- Pilih Anggota --</option>
                             <?php foreach ($d_anggota as $anggota): ?>
                                 <option value="<?php echo $anggota['id_anggota']; ?>">

@@ -4,9 +4,9 @@
  * MASATA PINJAMIN
  */
 
-require_once '../../config/database.php';
-require_once '../../config/session.php';
-require_once '../../config/helper.php';
+require_once '../config/database.php';
+require_once '../config/session.php';
+require_once '../config/helper.php';
 
 // Redirect jika belum login
 require_login();
@@ -118,8 +118,8 @@ ksort($simpanan_data);
 ksort($pinjaman_data);
 
 // Include header
-require_once '../../partials/header.php';
-require_once '../../partials/sidebar.php';
+require_once '../partials/header.php';
+require_once '../partials/sidebar.php';
 ?>
 
 <!-- Main Content -->
@@ -130,6 +130,55 @@ require_once '../../partials/sidebar.php';
             <i class="fas fa-tachometer-alt" style="color: #2ecc71;"></i> Dashboard
         </h3>
         <small style="color: #7f8c8d;">Selamat datang di MASATA PINJAMIN</small>
+    </div>
+
+    <div class="card mb-4" style="background: linear-gradient(135deg, rgba(14,165,233,0.92) 0%, rgba(16,185,129,0.92) 100%); color: white; border: none; overflow: hidden;">
+        <div class="card-body p-4 p-lg-5" style="position: relative;">
+            <div style="position: absolute; inset: auto -60px -70px auto; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.1);"></div>
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="badge" style="background: rgba(255,255,255,0.18); color: white; margin-bottom: 14px;">Dashboard Ringkas</span>
+                    <h2 style="font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px;">Halo, <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Admin'; ?></h2>
+                    <p style="max-width: 56ch; margin-bottom: 18px; color: rgba(255,255,255,0.88);">
+                        Pantau aktivitas koperasi dari satu layar. Angka penting, grafik, dan status transaksi diperbarui untuk membantu pengambilan keputusan lebih cepat.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="<?php echo BASE_URL; ?>/admin/anggota/index.php" class="btn btn-light text-dark">
+                            <i class="fas fa-users"></i> Anggota
+                        </a>
+                        <a href="<?php echo BASE_URL; ?>/admin/simpanan/index.php" class="btn btn-light text-dark">
+                            <i class="fas fa-coins"></i> Simpanan
+                        </a>
+                        <a href="<?php echo BASE_URL; ?>/admin/pinjaman/index.php" class="btn btn-light text-dark">
+                            <i class="fas fa-money-bill-wave"></i> Pinjaman
+                        </a>
+                        <a href="<?php echo BASE_URL; ?>/admin/laporan/pinjaman.php" class="btn btn-outline-light">
+                            <i class="fas fa-print"></i> Laporan
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="card h-100" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.16); color: white;">
+                                <div class="card-body">
+                                    <small style="opacity: 0.85;">Hari ini</small>
+                                    <div style="font-size: 1.3rem; font-weight: 800; margin-top: 8px;"><?php echo date('d M Y'); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card h-100" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.16); color: white;">
+                                <div class="card-body">
+                                    <small style="opacity: 0.85;">Role</small>
+                                    <div style="font-size: 1.3rem; font-weight: 800; margin-top: 8px; text-transform: capitalize;"><?php echo isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'Admin'; ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <?php if (isset($_SESSION['success'])): ?>
@@ -400,5 +449,5 @@ require_once '../../partials/sidebar.php';
 
 <?php
 // Include footer
-require_once '../../partials/footer.php';
+require_once '../partials/footer.php';
 ?>

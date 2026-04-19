@@ -49,7 +49,7 @@ require_once '../../partials/sidebar.php';
     </div>
     
     <!-- Filter -->
-    <div class="card mb-4" style="print: false;">
+    <div class="card mb-4 no-print">
         <div class="card-body">
             <form method="GET" class="row g-3">
                 <div class="col-md-4">
@@ -143,6 +143,10 @@ require_once '../../partials/sidebar.php';
     .card {
         border: none;
         box-shadow: none;
+    }
+
+    .no-print {
+        display: none !important;
     }
 </style>
 

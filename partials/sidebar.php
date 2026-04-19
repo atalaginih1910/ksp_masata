@@ -118,6 +118,9 @@ $current_module = isset($_GET['module']) ? $_GET['module'] : '';
         <h2><i class="fas fa-bars"></i> MASATA PINJAMIN</h2>
     </div>
     <div class="topnav-right">
+        <a href="<?php echo BASE_URL; ?>/logout.php" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin logout?');" title="Logout dari sistem">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
         <div class="topnav-user">
             <div class="topnav-user-avatar">
                 <i class="fas fa-user"></i>

@@ -82,7 +82,7 @@ require_once '../../partials/sidebar.php';
             <form method="GET" class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Filter Anggota</label>
-                    <select name="filter_anggota" class="form-control">
+                    <select name="filter_anggota" class="form-control member-select">
                         <option value="">-- Semua Anggota --</option>
                         <?php foreach ($d_anggota as $anggota): ?>
                             <option value="<?php echo $anggota['id_anggota']; ?>" <?php echo $filter_anggota === $anggota['id_anggota'] ? 'selected' : ''; ?>>
@@ -195,7 +195,7 @@ require_once '../../partials/sidebar.php';
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="id_anggota" class="form-label">Anggota</label>
-                        <select name="id_anggota" id="id_anggota" class="form-control" required>
+                        <select name="id_anggota" id="id_anggota" class="form-control member-select" required>
                             <option value="">-- Pilih Anggota --</option>
                             <?php foreach ($d_anggota as $anggota): ?>
                                 <option value="<?php echo $anggota['id_anggota']; ?>">

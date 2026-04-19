@@ -31,9 +31,9 @@ if ($filter_status === 'lunas') {
 }
 
 // Get angsuran
-$sql = "SELECT ang.*, a.nama, p.nama_pinjaman, p.besar_pinjaman FROM angsuran ang 
-        LEFT JOIN anggota a ON ang.id_anggota = a.id_anggota 
-        LEFT JOIN pinjaman p ON ang.id_kategori = p.id_pinjaman
+$sql = "SELECT ang.*, a.nama, k.nama_pinjaman FROM angsuran ang 
+    LEFT JOIN anggota a ON ang.id_anggota = a.id_anggota 
+    LEFT JOIN kategori_pinjaman k ON ang.id_kategori = k.id_kategori_pinjaman
         WHERE $where 
         ORDER BY ang.id_angsuran DESC 
         LIMIT $offset, $limit";
@@ -85,7 +85,7 @@ require_once '../../partials/sidebar.php';
             <form method="GET" class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Filter Anggota</label>
-                    <select name="filter_anggota" class="form-control">
+                    <select name="filter_anggota" class="form-control member-select">
                         <option value="">-- Semua Anggota --</option>
                         <?php foreach ($d_anggota as $anggota): ?>
                             <option value="<?php echo $anggota['id_anggota']; ?>" <?php echo $filter_anggota === $anggota['id_anggota'] ? 'selected' : ''; ?>>
@@ -127,6 +127,7 @@ require_once '../../partials/sidebar.php';
                     <tr>
                         <th style="width: 5%;">No</th>
                         <th>Anggota</th>
+                        <th>Kategori</th>
                         <th>Angsuran Ke</th>
                         <th>Tgl. Pembayaran</th>
                         <th style="text-align: right;">Jumlah</th>
@@ -140,6 +141,7 @@ require_once '../../partials/sidebar.php';
                             <tr>
                                 <td><?php echo $no++; ?></td>
                                 <td><?php echo $angsuran['nama']; ?></td>
+                                <td><?php echo $angsuran['nama_pinjaman'] ?: '-'; ?></td>
                                 <td><?php echo $angsuran['angsuran_ke']; ?></td>
                                 <td><?php echo $angsuran['tgl_pembayaran'] ? format_tanggal($angsuran['tgl_pembayaran']) : '-'; ?></td>
                                 <td style="text-align: right; font-weight: bold;"><?php echo format_rupiah($angsuran['besar_angsuran']); ?></td>
@@ -164,7 +166,7 @@ require_once '../../partials/sidebar.php';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-4">
+                            <td colspan="8" class="text-center text-muted py-4">
                                 <i class="fas fa-inbox" style="font-size: 30px; opacity: 0.3;"></i>
                                 <p style="margin-top: 10px;">Tidak ada data angsuran</p>
                             </td>
@@ -214,21 +216,17 @@ require_once '../../partials/sidebar.php';
             <form action="process.php" method="POST">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="id_kategori" class="form-label">Pinjaman</label>
-                        <select name="id_kategori" id="id_kategori" class="form-control" required>
-                            <option value="">-- Pilih Pinjaman --</option>
-                            <?php 
-                            // Get daftar pinjaman yang aktif
-                            $q_pin = "SELECT id_pinjaman, nama_pinjaman, a.nama FROM pinjaman p 
-                                     LEFT JOIN anggota a ON p.id_anggota = a.id_anggota 
-                                     WHERE p.tgl_acc_peminjam IS NOT NULL AND p.tgl_pelunasan IS NULL 
-                                     ORDER BY a.nama ASC";
-                            $r_pin = query($q_pin);
-                            $d_pin = fetch_all($r_pin);
-                            foreach ($d_pin as $pin): 
+                        <label for="id_kategori" class="form-label">Kategori Pinjaman</label>
+                        <select name="id_kategori" id="id_kategori" class="form-control member-select" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <?php
+                            $q_kategori = "SELECT id_kategori_pinjaman, nama_pinjaman FROM kategori_pinjaman ORDER BY nama_pinjaman ASC";
+                            $r_kategori = query($q_kategori);
+                            $d_kategori = fetch_all($r_kategori);
+                            foreach ($d_kategori as $kategori):
                             ?>
-                                <option value="<?php echo $pin['id_pinjaman']; ?>">
-                                    <?php echo $pin['nama'] . ' - ' . $pin['nama_pinjaman']; ?>
+                                <option value="<?php echo $kategori['id_kategori_pinjaman']; ?>">
+                                    <?php echo $kategori['nama_pinjaman']; ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -236,7 +234,7 @@ require_once '../../partials/sidebar.php';
                     
                     <div class="mb-3">
                         <label for="id_anggota" class="form-label">Anggota</label>
-                        <select name="id_anggota" id="id_anggota" class="form-control" required>
+                        <select name="id_anggota" id="id_anggota" class="form-control member-select" required>
                             <option value="">-- Pilih Anggota --</option>
                             <?php foreach ($d_anggota as $anggota): ?>
                                 <option value="<?php echo $anggota['id_anggota']; ?>">
@@ -248,7 +246,8 @@ require_once '../../partials/sidebar.php';
                     
                     <div class="mb-3">
                         <label for="angsuran_ke" class="form-label">Angsuran Ke</label>
-                        <input type="number" name="angsuran_ke" id="angsuran_ke" class="form-control" min="1" required>
+                        <input type="number" name="angsuran_ke" id="angsuran_ke" class="form-control" min="1" placeholder="Kosongkan untuk auto">
+                        <small class="text-muted">Jika dikosongkan, nomor angsuran akan diisi otomatis.</small>
                     </div>
                     
                     <div class="mb-3">

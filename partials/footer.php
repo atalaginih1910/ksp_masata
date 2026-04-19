@@ -32,6 +32,10 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Tom Select (Searchable Select) -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
 <!-- Custom JS -->
 <script src="<?php echo BASE_URL; ?>/assets/js/script.js"></script>
 
@@ -44,6 +48,20 @@
                 const bsAlert = new bootstrap.Alert(alert);
                 bsAlert.close();
             }, 5000);
+        });
+
+        // Searchable dropdown untuk data anggota/kategori yang panjang
+        document.querySelectorAll('select.member-select').forEach((el) => {
+            if (!el.tomselect) {
+                new TomSelect(el, {
+                    create: false,
+                    sortField: {
+                        field: 'text',
+                        direction: 'asc'
+                    },
+                    placeholder: 'Ketik untuk mencari...'
+                });
+            }
         });
     });
 </script>

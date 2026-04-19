@@ -8,46 +8,46 @@ require_once 'config/database.php';
 require_once 'config/session.php';
 require_once 'config/helper.php';
 
-// Jika sudah login, redirect ke dashboard
 if (is_logged_in()) {
-    header("Location: " . BASE_URL . "/admin/dashboard.php");
+    header('Location: ' . BASE_URL . '/admin/dashboard.php');
+    exit;
+}
+
+if (is_anggota_logged_in()) {
+    header('Location: ' . BASE_URL . '/anggota/dashboard.php');
     exit;
 }
 
 $error = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = escape($_POST['username']);
-    $password = escape($_POST['password']);
-    
-    // Validasi input
-    if (empty($username) || empty($password)) {
-        $error = "Username dan Password harus diisi!";
+    $username = trim(escape($_POST['username'] ?? ''));
+    $password = trim($_POST['password'] ?? '');
+
+    if ($username === '' || $password === '') {
+        $error = 'Username dan Password harus diisi!';
     } else {
-        // Query ke database untuk cek login
-        // Note: Untuk demo, kita gunakan petugas_koperasi sebagai user
         $sql = "SELECT * FROM petugas_koperasi WHERE nama = '$username' LIMIT 1";
         $result = query($sql);
         $user = fetch_single($result);
-        
+
         if ($user) {
-            // Untuk versi sederhana, password adalah hardcoded
-            // Pada production, gunakan password_hash dan password_verify
-            if ($password === 'admin123') {
+            $expectedPassword = stripos((string) $user['ket'], 'admin') !== false ? 'admin123' : 'petugas123';
+
+            if ($password === $expectedPassword) {
                 $_SESSION['user_id'] = $user['id_petugas'];
                 $_SESSION['user_name'] = $user['nama'];
-                $_SESSION['user_role'] = 'admin'; // Default role admin
+                $_SESSION['user_role'] = stripos((string) $user['ket'], 'admin') !== false ? 'admin' : 'petugas';
                 $_SESSION['user_phone'] = $user['no_tlp'];
-                
-                $_SESSION['success'] = "Selamat datang, " . $user['nama'] . "!";
-                header("Location: " . BASE_URL . "/admin/dashboard.php");
+                $_SESSION['success'] = 'Selamat datang, ' . $user['nama'] . '!';
+
+                header('Location: ' . BASE_URL . '/admin/dashboard.php');
                 exit;
-            } else {
-                $error = "Username atau Password salah!";
             }
+
+            $error = 'Username atau Password salah!';
         } else {
-            $error = "Username atau Password salah!";
+            $error = 'Username atau Password salah!';
         }
     }
 }
@@ -58,150 +58,237 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - MASATA PINJAMIN</title>
-    
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
+        :root {
+            color-scheme: light;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .login-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            max-width: 450px;
-            width: 100%;
+            font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.20), transparent 26%),
+                radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.18), transparent 24%),
+                linear-gradient(135deg, #07111f 0%, #0d1b2a 50%, #10243b 100%);
         }
-        
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(18px);
+            opacity: 0.55;
+        }
+
+        body::before {
+            width: 320px;
+            height: 320px;
+            left: -120px;
+            bottom: -90px;
+            background: rgba(45, 212, 191, 0.18);
+        }
+
+        body::after {
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: 12%;
+            background: rgba(56, 189, 248, 0.16);
+        }
+
+        .login-container {
+            position: relative;
+            width: min(1040px, calc(100vw - 32px));
+            display: grid;
+            grid-template-columns: 1.08fr 0.92fr;
+            overflow: hidden;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.34);
+            backdrop-filter: blur(18px);
+        }
+
         .login-header {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
+            position: relative;
+            padding: 48px 42px;
+            text-align: left;
+            color: #f8fafc;
+            background:
+                linear-gradient(145deg, rgba(8, 47, 73, 0.92), rgba(15, 118, 110, 0.9)),
+                radial-gradient(circle at top left, rgba(45, 212, 191, 0.28), transparent 34%),
+                radial-gradient(circle at 70% 25%, rgba(56, 189, 248, 0.22), transparent 30%);
         }
-        
-        .login-header h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .login-header::after {
+            content: '';
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
         }
-        
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
+
         .login-header i {
-            font-size: 40px;
-            margin-bottom: 10px;
-            display: block;
+            display: inline-flex;
+            width: 68px;
+            height: 68px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            border-radius: 22px;
+            font-size: 30px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
         }
-        
+
+        .login-header h1 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        .login-header p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(226, 232, 240, 0.8);
+            max-width: 42ch;
+        }
+
         .login-body {
-            padding: 40px 30px;
+            padding: 42px 38px;
+            background: rgba(255, 255, 255, 0.93);
         }
-        
+
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            color: #334155;
+            font-weight: 700;
             font-size: 14px;
         }
-        
+
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 14px;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            background: #fff;
         }
-        
+
         .form-group input:focus {
             outline: none;
-            border-color: #2ecc71;
-            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+            border-color: rgba(45, 212, 191, 0.85);
+            box-shadow: 0 0 0 0.22rem rgba(45, 212, 191, 0.16);
+            transform: translateY(-1px);
         }
-        
+
         .btn-login {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #10b981 0%, #2dd4bf 42%, #38bdf8 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            box-shadow: 0 14px 30px rgba(45, 212, 191, 0.22);
             margin-top: 10px;
         }
-        
+
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2);
+            box-shadow: 0 18px 36px rgba(56, 189, 248, 0.26);
         }
-        
+
         .alert {
-            margin-bottom: 20px;
-            border-radius: 8px;
+            margin-bottom: 18px;
+            border-radius: 14px;
             border: none;
             padding: 12px 15px;
         }
-        
+
+        .login-note {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: #effbf6;
+            border: 1px solid #d8f5e6;
+            color: #14532d;
+            font-size: 13px;
+        }
+
+        .login-note strong {
+            display: inline-block;
+            min-width: 92px;
+        }
+
         .login-footer {
             text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
+            padding: 14px 0 0;
+            color: #64748b;
             font-size: 12px;
-            color: #666;
         }
-        
-        .input-group-text {
-            background: transparent;
-            border: 2px solid #e0e0e0;
-            color: #666;
+
+        @media (max-width: 900px) {
+            body {
+                overflow-y: auto;
+                padding: 18px 0;
+            }
+
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .login-header,
+            .login-body {
+                padding: 30px 22px;
+            }
         }
-        
-        .input-group input:focus + .input-group-text {
-            border-color: #2ecc71;
-            color: #2ecc71;
+
+        @media (max-width: 576px) {
+            .login-container {
+                width: calc(100vw - 18px);
+                border-radius: 22px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <!-- Header -->
         <div class="login-header">
             <i class="fas fa-piggy-bank"></i>
             <h1>MASATA PINJAMIN</h1>
-            <p>Koperasi Simpan Pinjam</p>
+            <p>
+                Panel Koperasi Simpan Pinjam yang profesional, modern, dan mudah digunakan.
+                Kelola anggota, simpanan, pinjaman, angsuran, dan laporan dalam satu tempat.
+            </p>
         </div>
-        
-        <!-- Body -->
+
         <div class="login-body">
             <?php if ($error): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -209,45 +296,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
-            
-            <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle"></i> <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
-            
+
+            <h2 class="mb-2" style="font-weight: 800; color: #0f172a;">Masuk ke Sistem</h2>
+            <p class="mb-4" style="color: #64748b;">Gunakan akun petugas koperasi untuk melanjutkan.</p>
+
             <form method="POST" action="">
                 <div class="form-group">
                     <label for="username"><i class="fas fa-user"></i> Username</label>
                     <input type="text" id="username" name="username" placeholder="Masukkan username" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <input type="password" id="password" name="password" placeholder="Masukkan password" required>
                 </div>
-                
+
                 <button type="submit" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i> MASUK
                 </button>
             </form>
-            
-            <div style="text-align: center; margin-top: 20px; color: #999; font-size: 13px;">
-                <p><i class="fas fa-info-circle"></i></p>
-                <p>Demo Login:</p>
-                <p><strong>Username:</strong> Ahmad</p>
-                <p><strong>Password:</strong> admin123</p>
+
+            <div class="login-note">
+                <div><i class="fas fa-circle-info"></i> Login demo yang disiapkan di data contoh:</div>
+                <div><strong>Admin:</strong> Admin / admin123</div>
+                <div><strong>Petugas:</strong> Ata / petugas123</div>
+            </div>
+
+            <div class="mt-3 text-center">
+                <a href="<?php echo BASE_URL; ?>/anggota/login.php" class="btn btn-outline-primary w-100" style="border-radius: 12px;">
+                    <i class="fas fa-user"></i> Masuk Sebagai Anggota
+                </a>
+            </div>
+
+            <div class="login-footer">
+                &copy; 2026 MASATA PINJAMIN - Koperasi Simpan Pinjam.
             </div>
         </div>
-        
-        <!-- Footer -->
-        <div class="login-footer">
-            <p>&copy; 2026 MASATA PINJAMIN - Koperasi Simpan Pinjam. All rights reserved.</p>
-        </div>
     </div>
-    
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

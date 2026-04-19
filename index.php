@@ -4,6 +4,8 @@
  * MASATA PINJAMIN - Koperasi Simpan Pinjam
  */
 
+require_once 'config/session.php';
+
 // Jika sudah login, redirect ke admin dashboard
 if (isset($_SESSION['user_id'])) {
     header("Location: admin/dashboard.php");
